@@ -32,13 +32,12 @@ class PegawaiController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'nama' => 'required|max:255',
-            'pangkat' => 'required|in:juru,pengatur,penata',
+            'nama' => 'required',
+            'pangkat' => 'required',
             'alamat' => 'required',
         ]);
         $pegawai = pegawai::create($validateData);
-        return redirect('/pegawai')
-
+        return redirect('/pegawai')->with('succses','Pegawai created succesfully');
     }
 
     /**
@@ -55,6 +54,8 @@ class PegawaiController extends Controller
     public function edit(pegawai $pegawai)
     {
         //
+        $pegawai = pegawai::findOrFail($id);
+        return view('pegawai.edit',compact('pegawai'));
     }
 
     /**
@@ -62,7 +63,15 @@ class PegawaiController extends Controller
      */
     public function update(Request $request, pegawai $pegawai)
     {
-        //
+        // dff
+        $validateData = $request->validate([
+            'nama' => 'required',
+            'pangkat' => 'required',
+            'alamat' => 'required',
+        ]);
+        pegawai::whereId($id)->update($validateData);
+
+        return redirect('/pegawai')->with('succses','Pegawai updated succesfully');
     }
 
     /**
@@ -71,5 +80,8 @@ class PegawaiController extends Controller
     public function destroy(pegawai $pegawai)
     {
         //
+        $pegawai = pegawai::findOrFail($id);
+        $pegawai-> delete();
+        return redirect('/pegawai')->with('succses','Pegawai deleted succesfully');
     }
 }
